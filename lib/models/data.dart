@@ -1,8 +1,51 @@
 import './product.dart';
 
+List<Product> cartItems = [];
+List<Product> favoriteItems = [];
+
+List<double> totalPrice = [];
+// double getCartTotalPrice() {
+//   for (int i = 0; i < cartItems.length; i++) {
+//     totalPrice += cartItems[i].price;
+//   }
+//   return totalPrice;
+// }
+
+bool isItemOnCart(Product product) {
+  return cartItems.any((cartitem) => cartitem.id == product.id);
+}
+
+bool isItemOnFavorite(Product product) {
+  return favoriteItems.any((favoriteItem) => favoriteItem.id == product.id);
+}
+
+void toggleItemtoCart(Product product) {
+  if (isItemOnCart(product)) {
+    for (var i = 0; i < totalPrice.length; i++) {
+      if (totalPrice[i] == product.price) {
+        totalPrice.remove(product.price);
+      }
+    }
+    cartItems.remove(product);
+    print(totalPrice);
+  } else {
+    totalPrice.add(product.price);
+    cartItems.add(product);
+    print(totalPrice);
+  }
+}
+
+void toggleItemtoFavirite(Product product) {
+  if (isItemOnFavorite(product)) {
+    favoriteItems.remove(product);
+  } else {
+    favoriteItems.add(product);
+  }
+}
+
+// ignore: constant_identifier_names
 const Products = [
-  
-   Product(
+  Product(
     'p7',
     ['ui'],
     'Leather BackPack',
@@ -10,7 +53,7 @@ const Products = [
     'The stronger the better it is to load it with all that the eyes sees useful and needful too. BackPack is a all-fit leather strong bag for carrying anything the hands can store and it\'s literally worth any penny',
     30.9,
     40.9,
-    ['red, grey, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
   Product(
     'p1',
@@ -20,9 +63,9 @@ const Products = [
     'A white smart watch with good features and more',
     29.99,
     39.99,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-   Product(
+  Product(
     'p16',
     ['u3'],
     'PowerBook',
@@ -30,19 +73,19 @@ const Products = [
     'Awesome hardware, crappy keyboard and a hefty price. Buy now before a  one is released!',
     2299.99,
     3299.99,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-   Product(
+  Product(
     'p2',
     ['u1'],
     'Red Sneakers',
     'https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHByb2R1Y3R8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
-    'Perfect for your joggers and black T-shirts. The sneakers comes in different sizes and colors. You never know when that T-shirt needs some styles with the soft layers of a sneakers',
+    'Perfect for your joggers and black T-shirts and more. The sneakers comes in different sizes and colors. You never know when that T-shirt needs some styles with the soft layers of a sneakers',
     199.99,
     299.99,
-    ['red, orange, black, indigo, purple']
+    'yellow,grey,black,red,teal',
   ),
-   Product(
+  Product(
     'p3',
     ['u1'],
     'Nikon Camera',
@@ -50,11 +93,9 @@ const Products = [
     'You can only see clearer with your eyes but a camera saves the memory in it\'s eyes',
     89.9,
     109.9,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-
-
-   Product(
+  Product(
     'p4',
     ['u1'],
     'HeadSets',
@@ -62,10 +103,9 @@ const Products = [
     'The louder the sound, the better it feels inside with the body',
     120.1,
     150.1,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-
-   Product(
+  Product(
     'p5',
     ['u1'],
     'Amazon SoundBox',
@@ -73,10 +113,9 @@ const Products = [
     'Automated soundbox with voice recognition and more. What could be more better',
     78.19,
     88.19,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-
-   Product(
+  Product(
     'p6',
     ['u1'],
     'Xbox 360 GamePads',
@@ -84,12 +123,9 @@ const Products = [
     'You never know when it is time to touch it better except the pads with xbox is there to assist',
     98.99,
     108.99,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-
-
-
-   Product(
+  Product(
     'p8',
     ['ui'],
     'Stand with a Cam',
@@ -97,11 +133,9 @@ const Products = [
     'Even the universe could be snapped with a touch of this awesome camera. The more clearer, the better',
     99.99,
     109.99,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-
-
-   Product(
+  Product(
     'p9',
     ['ui'],
     'Game Boy',
@@ -109,12 +143,9 @@ const Products = [
     'A game for keys between the ages of 4-9',
     9.99,
     19.99,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-
-
-
-   Product(
+  Product(
     'p10',
     ['ui'],
     'Keyboard',
@@ -122,11 +153,9 @@ const Products = [
     'Type your way out of stress and low income. Allow the keys save the day',
     76.99,
     86.99,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-
-
-   Product(
+  Product(
     'p11',
     ['ui'],
     'Beats by Dre',
@@ -134,11 +163,9 @@ const Products = [
     'Beats by Dr Dre is a sound headset you do not want to miss out without laying your hands on it',
     67.99,
     77.99,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-
-
-   Product(
+  Product(
     'p12',
     ['ui'],
     'iSets',
@@ -146,11 +173,9 @@ const Products = [
     'Comes along with an Iphone, Watch, Ipod and more. It is better than buying all',
     2399.99,
     3499.99,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-
-
-   Product(
+  Product(
     'p13',
     ['ui'],
     'camLens',
@@ -158,11 +183,9 @@ const Products = [
     'With lens on you could see better, with camLens a camera can see more better',
     77.99,
     87.99,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-
-
-   Product(
+  Product(
     'p14',
     ['u2'],
     'Coffee Mug',
@@ -170,9 +193,9 @@ const Products = [
     'Can also be used for tea!',
     8.99,
     10.99,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-   Product(
+  Product(
     'p15',
     ['ui'],
     'The Book - Limited Edition',
@@ -180,10 +203,9 @@ const Products = [
     "What the content is? Why would that matter? It's a limited edition!",
     15.99,
     25.99,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   ),
-  
-   Product(
+  Product(
     'p17',
     ['ui'],
     'Pen & Paper',
@@ -191,6 +213,6 @@ const Products = [
     "Can be used for role-playing (not the kind of role-playing you're thinking about...).",
     5.49,
     15.49,
-    ['red, orange, black, indigo, purple']
+    'red,grey,black,indigo,purple',
   )
 ];

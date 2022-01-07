@@ -1,21 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shoppie/models/data.dart';
+import 'package:shoppie/models/product.dart';
 
-class SingleItemGridView extends StatelessWidget {
+class SingleItemGridView extends StatefulWidget {
   final String name;
   final double price;
   final double previousPrice;
   final String imageUrl;
+  final Product product;
 
   // ignore: use_key_in_widget_constructors, prefer_const_constructors_in_immutables
-  SingleItemGridView(
-      {required this.name,
-      required this.price,
-      required this.imageUrl,
-      required this.previousPrice});
+  SingleItemGridView({
+    required this.name,
+    required this.price,
+    required this.imageUrl,
+    required this.previousPrice,
+    required this.product,
+  });
 
   @override
+  State<SingleItemGridView> createState() => _SingleItemGridViewState();
+}
+
+class _SingleItemGridViewState extends State<SingleItemGridView> {
+  @override
   Widget build(BuildContext context) {
+    // ignore: sized_box_for_whitespace
     return Container(
       height: 90,
       child: Card(
@@ -31,11 +42,11 @@ class SingleItemGridView extends StatelessWidget {
                     topLeft: Radius.circular(15),
                   ),
                   child: Image.network(
-                    imageUrl,
-                     alignment: Alignment.center,
+                    widget.imageUrl,
+                    alignment: Alignment.center,
                     fit: BoxFit.cover,
                     height: 120,
-                    cacheHeight:120,
+                    cacheHeight: 120,
                     width: double.infinity,
                   ),
                 ),
@@ -50,18 +61,30 @@ class SingleItemGridView extends StatelessWidget {
                     child: Column(
                       children: [
                         IconButton(
-                          icon: const Icon(
-                            CupertinoIcons.heart,
+                          icon: Icon(
+                            isItemOnFavorite(widget.product)
+                                ? CupertinoIcons.heart_fill
+                                : CupertinoIcons.heart,
                             color: Colors.deepOrange,
                           ),
-                          onPressed: () {},
+                          onPressed: () => setState(
+                            () {
+                              toggleItemtoFavirite(widget.product);
+                            },
+                          ),
                         ),
                         IconButton(
-                          icon: const Icon(
-                            Icons.shopping_cart,
+                          icon:  Icon(
+                             isItemOnCart(widget.product)
+                                ? Icons.shopping_cart
+                                : Icons.shopping_cart_outlined,
                             color: Colors.deepOrange,
                           ),
-                          onPressed: () {},
+                          onPressed: () => setState(
+                            () {
+                              toggleItemtoCart(widget.product);
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -75,7 +98,7 @@ class SingleItemGridView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    name,
+                    widget.name,
                     maxLines: 1,
                     style: const TextStyle(
                       overflow: TextOverflow.ellipsis,
@@ -84,7 +107,7 @@ class SingleItemGridView extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        '\$${price.toString()}',
+                        '\$${widget.price.toString()}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -94,7 +117,7 @@ class SingleItemGridView extends StatelessWidget {
                         width: 2,
                       ),
                       Text(
-                        '\$${previousPrice.toString()}',
+                        '\$${widget.previousPrice.toString()}',
                         style: const TextStyle(
                           decoration: TextDecoration.lineThrough,
                           fontSize: 13,

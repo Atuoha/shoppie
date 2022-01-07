@@ -6,7 +6,7 @@ class Product {
   final String description;
   final double price;
   final double previousPrice;
-  final List<String> colors;
+  final String colors;
 
   const Product(
    this.id,

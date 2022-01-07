@@ -21,6 +21,7 @@ class GridItemView extends StatelessWidget {
             price: product.price,
             previousPrice: product.previousPrice,
             imageUrl: product.imageUrl,
+            product: product,
           ),
         );
       }).toList(),
