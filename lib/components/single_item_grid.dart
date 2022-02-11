@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shoppie/models/data.dart';
+import 'package:provider/provider.dart';
 import 'package:shoppie/models/product.dart';
+import 'package:shoppie/providers/cart.dart';
+import 'package:shoppie/providers/product.dart';
 
 class SingleItemGridView extends StatefulWidget {
   final String name;
+  final String id;
   final double price;
   final double previousPrice;
   final String imageUrl;
@@ -13,6 +16,7 @@ class SingleItemGridView extends StatefulWidget {
   // ignore: use_key_in_widget_constructors, prefer_const_constructors_in_immutables
   SingleItemGridView({
     required this.name,
+    required this.id,
     required this.price,
     required this.imageUrl,
     required this.previousPrice,
@@ -26,10 +30,18 @@ class SingleItemGridView extends StatefulWidget {
 class _SingleItemGridViewState extends State<SingleItemGridView> {
   @override
   Widget build(BuildContext context) {
+    final productData = Provider.of<Products>(context, listen: false);
+    final cartData = Provider.of<Cart>(context, listen: false);
+
     // ignore: sized_box_for_whitespace
     return Container(
-      height: 90,
+      height: 95,
       child: Card(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(25),
+          ),
+        ),
         color: Colors.white,
         elevation: 5,
         child: Column(
@@ -38,8 +50,7 @@ class _SingleItemGridViewState extends State<SingleItemGridView> {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(15),
-                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(25),
                   ),
                   child: Image.network(
                     widget.imageUrl,
@@ -62,27 +73,34 @@ class _SingleItemGridViewState extends State<SingleItemGridView> {
                       children: [
                         IconButton(
                           icon: Icon(
-                            isItemOnFavorite(widget.product)
+                            productData.isItemOnFavorite(widget.product)
                                 ? CupertinoIcons.heart_fill
                                 : CupertinoIcons.heart,
                             color: Colors.deepOrange,
                           ),
                           onPressed: () => setState(
                             () {
-                              toggleItemtoFavirite(widget.product);
+                              productData.toggleItemtoFavirite(widget.product);
                             },
                           ),
                         ),
                         IconButton(
-                          icon:  Icon(
-                             isItemOnCart(widget.product)
+                          icon: Icon(
+                            cartData.isItemOnCart(widget.id)
                                 ? Icons.shopping_cart
-                                : Icons.shopping_cart_outlined,
+                                : Icons.add_shopping_cart_sharp,
                             color: Colors.deepOrange,
                           ),
                           onPressed: () => setState(
                             () {
-                              toggleItemtoCart(widget.product);
+                              cartData.addItemToCart(
+                                widget.id,
+                                widget.name,
+                                widget.price,
+                                widget.previousPrice,
+                                widget.imageUrl,
+                                // widget.imageUrl,
+                              );
                             },
                           ),
                         ),
@@ -93,7 +111,7 @@ class _SingleItemGridViewState extends State<SingleItemGridView> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(4.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

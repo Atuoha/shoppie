@@ -5,11 +5,108 @@ class DrawerComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget buildMenuTile(String title, IconData icon, String routeName) {
+      return ListTile(
+        title: Text(title),
+        leading: Icon(icon),
+        onTap: () {
+          Navigator.of(context).pushNamed(routeName);
+        },
+      );
+    }
+
     return Drawer(
-      // ignore: avoid_unnecessary_containers
-      child: Container(
-        child: const Text('ddddd'),
-      ),
+      child: Column(children: [
+        Expanded(
+          flex: 3,
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  ClipRect(
+                    child: Image.asset(
+                      'assets/imgs/b6.jpg',
+                      height: 210,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 70,
+                    // ignore: sized_box_for_whitespace
+                    child: Container(
+                      height: 90,
+                      width: 90,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: Image.asset(
+                            'assets/imgs/default.png',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 150,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey.withOpacity(0.3),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Column(
+                          children: const [
+                            Text(
+                              'Tony Atuoha',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                            Text(
+                              'Product Manager',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    buildMenuTile('Create a Product', Icons.add, ''),
+                    buildMenuTile('Ordered Products', Icons.shopping_bag, ''),
+                    buildMenuTile('Reports', Icons.insert_chart_rounded, ''),
+                    buildMenuTile('Statistics', Icons.show_chart, ''),
+                    buildMenuTile('Sign Out', Icons.logout_outlined, ''),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(children: [
+              const Divider(),
+              buildMenuTile('Tell a Friend', Icons.share, ''),
+              buildMenuTile('Help and Feedback', Icons.help, ''),
+            ],),
+          ),
+        )
+      ],),
     );
   }
 }

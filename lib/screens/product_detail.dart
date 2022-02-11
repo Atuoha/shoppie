@@ -1,10 +1,10 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shoppie/models/data.dart';
+import 'package:provider/provider.dart';
 import 'package:shoppie/models/product.dart';
+import 'package:shoppie/providers/cart.dart';
+import 'package:shoppie/providers/product.dart';
 
 // ignore: use_key_in_widget_constructors
 class ProductDetails extends StatefulWidget {
@@ -17,19 +17,21 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
+    final cartData = Provider.of<Cart>(context, listen: false);
+
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
       ),
     );
 
+    final productData = Provider.of<Products>(context);
+
     var data =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     var id = data["id"] as String;
 
-    Product productDetails = Products.firstWhere((product) {
-      return product.id == id;
-    });
+    Product productDetails = productData.findById(id);
 
     List<String> availableColors = productDetails.colors.split(',');
     late Color colored;
@@ -154,14 +156,15 @@ class _ProductDetailsState extends State<ProductDetails> {
           actions: [
             IconButton(
               icon: Icon(
-                isItemOnFavorite(productDetails)
+                productData.isItemOnFavorite(productDetails)
                     ? CupertinoIcons.heart_fill
                     : CupertinoIcons.heart,
                 color: Colors.deepOrange,
               ),
               onPressed: () => setState(
                 () {
-                  toggleItemtoFavirite(productDetails);
+                  productData
+                      .toggleItemtoFavirite(productDetails);
                 },
               ),
             ),
@@ -277,12 +280,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ),
                   const SizedBox(height: 15),
                   ElevatedButton(
-                    onPressed: ()=> setState(
-                            () {
-                              toggleItemtoCart(productDetails);
-                            },
-                          ),
-                    child:  Text(isItemOnCart(productDetails) ? 'Remove from Cart' : 'Add to Cart'),
+                    onPressed: () => setState(
+                      () {
+                         cartData.addItemToCart(
+                                productDetails.id,
+                                productDetails.name,
+                                productDetails.price,
+                                productDetails.previousPrice,
+                                productDetails.imageUrl,
+                              );
+                      },
+                    ),
+                    child: Text(cartData
+                            .isItemOnCart(productDetails.id)
+                        ? 'Remove from Cart'
+                        : 'Add to Cart'),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.deepOrange,
                       shape: RoundedRectangleBorder(

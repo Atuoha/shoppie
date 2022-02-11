@@ -1,8 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shoppie/components/cart_down_summary.dart';
 import 'package:shoppie/components/single_cart_item.dart';
-import 'package:shoppie/models/data.dart';
+import 'package:shoppie/providers/cart.dart' show Cart;
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -13,78 +13,40 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    setState(
-      () {
-        Timer.periodic(
-            const Duration(milliseconds: 1), (Timer timer) => totalPrice);
-      },
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return cartItems.isEmpty
+    final cartData = Provider.of<Cart>(context, listen: false);
+
+    return cartData.items.isEmpty
         ? const Center(
             child: Text('Opps! No Item on Cart'),
           )
-        : Column(children: [
-            Expanded(
-              flex: 5,
-              child: ListView.builder(
-                itemCount: cartItems.length,
-                itemBuilder: (context, index) {
-                  return SingleCartItem(
-                    cartItems[index].name,
-                    cartItems[index].imageUrl,
-                    cartItems[index].price,
-                    cartItems[index].previousPrice,
-                  );
-                },
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('Total',
-                              style: TextStyle(
-                                fontSize: 18,
-                              )),
-                          Text(
-                            '\$${totalPrice.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.deepOrange,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('BUy Now'),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.deepOrange,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    )
-                  ],
+        : Column(
+            children: [
+              Expanded(
+                flex: 5,
+                child: Consumer<Cart>(
+                  builder: (_, cart, _2) => ListView.builder(
+                    itemCount: cart.items.length,
+                    itemBuilder: (context, index) {
+                      return SingleCartItem(
+                        id: cart.items.values.toList()[index].productId,
+                        name: cart.items.values.toList()[index].name,
+                        image: cart.items.values.toList()[index].imageUrl,
+                        price: cart.items.values.toList()[index].price,
+                        previousPrice:
+                            cart.items.values.toList()[index].previousPrice,
+                        quantity: cart.items.values.toList()[index].quantity,
+                      );
+                    },
+                  ),
                 ),
               ),
-            )
-          ]);
+              Consumer<Cart>(
+                builder: (_, cart, _2) => CartDownSummary(
+                  '\$${cart.totalAmount.toStringAsFixed(2)}',
+                ),
+              )
+            ],
+          );
   }
 }
