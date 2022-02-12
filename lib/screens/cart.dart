@@ -43,7 +43,7 @@ class _CartScreenState extends State<CartScreen> {
               ),
               Consumer<Cart>(
                 builder: (_, cart, _2) => CartDownSummary(
-                  '\$${cart.totalAmount.toStringAsFixed(2)}',
+                  cart.totalAmount, cart.items.values.toList()
                 ),
               )
             ],

@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:shoppie/providers/cart.dart';
 import 'package:shoppie/providers/product.dart';
 import 'package:shoppie/screens/cart.dart';
+import 'package:shoppie/screens/orders.dart';
 import 'package:shoppie/screens/product_detail.dart';
 import 'components/navigation.dart';
+import 'providers/orders.dart';
 
 void main() => runApp(const MyApp());
 
@@ -24,12 +26,14 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (context) => Products()),
         ChangeNotifierProvider(create: (context) => Cart()),
+        ChangeNotifierProvider(create: (context) => Orders()),
       ],
       child: MaterialApp(
         routes: {
           ProductDetails.routeName: (context) => ProductDetails(),
           NavigationBar.routeName: (context) => const NavigationBar(),
           CartScreen.routeName: (context) => const CartScreen(),
+          OrdersScreen.routeName: (context) => const OrdersScreen(),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

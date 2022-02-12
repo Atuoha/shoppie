@@ -72,7 +72,6 @@ class Cart extends ChangeNotifier {
               quantity: existingCartItem.quantity - 1,
             ),
           );
-
         }
         break;
       default:
@@ -89,22 +88,22 @@ class Cart extends ChangeNotifier {
       double previousPrice, String imageUrl) {
     if (_items.containsKey(productID)) {
       // increase quantity
-      
-      // Am checking using isItemOnCart to know if a user click on a already added to cart item. This operation can only be performed if the user want the item to be removed from the cart so if it is so, the item will be removed from the cart 
-      isItemOnCart(productID) ?
-        _items.remove(productID) :
-      _items.update(
-        productID,
-        (existingCartItem) => CartItem(
-          productId: existingCartItem.productId,
-          id: existingCartItem.id,
-          name: existingCartItem.name,
-          price: existingCartItem.price,
-          previousPrice: existingCartItem.previousPrice,
-          imageUrl: existingCartItem.imageUrl,
-          quantity: existingCartItem.quantity + 1,
-        ),
-      );
+
+      // Am checking using isItemOnCart to know if a user click on an already added to cart item.
+      isItemOnCart(productID)
+          ? _items.remove(productID) // This operation can only be performed if the user want the item to be removed from the cart so if it is so, the item will be removed from the cart
+          : _items.update(
+              productID,
+              (existingCartItem) => CartItem(
+                productId: existingCartItem.productId,
+                id: existingCartItem.id,
+                name: existingCartItem.name,
+                price: existingCartItem.price,
+                previousPrice: existingCartItem.previousPrice,
+                imageUrl: existingCartItem.imageUrl,
+                quantity: existingCartItem.quantity + 1,
+              ),
+            );
     } else {
       // add product
       _items.putIfAbsent(
@@ -127,4 +126,8 @@ class Cart extends ChangeNotifier {
     return _items.containsKey(productId);
   }
 
+  void clearCart() {
+    _items.clear();
+    notifyListeners();
+  }
 }

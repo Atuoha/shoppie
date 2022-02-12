@@ -4,10 +4,10 @@ import 'package:shoppie/providers/cart.dart';
 import 'package:shoppie/providers/orders.dart';
 import 'package:shoppie/screens/orders.dart';
 
-class CartDownSummary extends StatelessWidget {
+class OrderDownSummary extends StatelessWidget {
   final double totalAmount;
-  final List<CartItem> cartItems;
-  CartDownSummary(this.totalAmount,this.cartItems);
+  final List<OrderItem> cartItems;
+  OrderDownSummary(this.totalAmount,this.cartItems);
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +41,10 @@ class CartDownSummary extends StatelessWidget {
             ElevatedButton(
               onPressed: () => {
                 if(totalAmount > 0){
-                  Provider.of<Orders>(context,listen:false).addOrder(totalAmount,cartItems),
-                  Provider.of<Cart>(context, listen:false).clearCart(),
-                  Navigator.of(context).pushNamed(OrdersScreen.routeName)
+               
                 }
                 },
-              child: const Text('Order Now'),
+              child: const Text('Buy Now'),
               style: ElevatedButton.styleFrom(
                 primary: Colors.deepOrange,
                 shape: RoundedRectangleBorder(

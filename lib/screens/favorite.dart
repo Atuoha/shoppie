@@ -9,7 +9,7 @@ class FavoriteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider.of<Products>(context).favoriteItems.isEmpty
         ? const Center(
-            child: Text('Opps! No Item is your favorite'),
+            child: Text('Opps! No Item is in your favorite'),
           )
         : Padding(
             padding: const EdgeInsets.all(10),
