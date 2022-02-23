@@ -25,7 +25,7 @@ class _CartScreenState extends State<CartScreen> {
               Expanded(
                 flex: 5,
                 child: Consumer<Cart>(
-                  builder: (_, cart, _2) => ListView.builder(
+                  builder: (_, cart, c) => ListView.builder(
                     itemCount: cart.items.length,
                     itemBuilder: (context, index) {
                       return SingleCartItem(
@@ -42,7 +42,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               Consumer<Cart>(
-                builder: (_, cart, _2) => CartDownSummary(
+                builder: (_, cart, c) => CartDownSummary(
                   cart.totalAmount, cart.items.values.toList()
                 ),
               )

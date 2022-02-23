@@ -36,7 +36,7 @@ class OrdersScreen extends StatelessWidget {
         ),
         actions: [
           Consumer<Orders>(
-            builder: (_, orders, _2) => Badge(
+            builder: (_, orders, o) => Badge(
               child: const Icon(
                 Icons.shopping_bag_rounded,
                 color: Colors.black,
@@ -57,7 +57,7 @@ class OrdersScreen extends StatelessWidget {
               ),
             )
           : Consumer<Orders>(
-              builder: (_, orders, _2) => Column(
+              builder: (_, orders, o) => Column(
                 children: [
                   Expanded(
                     flex: 5,

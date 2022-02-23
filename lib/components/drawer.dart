@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shoppie/screens/orders.dart';
+import 'package:shoppie/screens/user_products.dart';
 
 class DrawerComponent extends StatelessWidget {
   const DrawerComponent({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    
+
     Widget buildMenuTile(String title, IconData icon, String routeName) {
       return ListTile(
         title: Text(title),
@@ -86,7 +87,7 @@ class DrawerComponent extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
-                    buildMenuTile('Create a Product', Icons.add, ''),
+                    buildMenuTile('Manage Products', Icons.add, UserProductScreen.routeName),
                     buildMenuTile('Ordered Products', Icons.shopping_bag, OrdersScreen.routeName),
                     buildMenuTile('Reports', Icons.insert_chart_rounded, ''),
                     buildMenuTile('Statistics', Icons.show_chart, ''),

@@ -96,11 +96,12 @@ class Body extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: GridItemView(
-              Provider.of<Products>(
-                context,
-                listen: false,
-              ).availableProducts,
+            child: Consumer<Products>(builder: (_,products,p2)=>GridItemView(
+                Provider.of<Products>(
+                  context,
+                  listen: false,
+                ).availableProducts,
+              ),
             ),
           )
         ],

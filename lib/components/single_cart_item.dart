@@ -6,6 +6,7 @@ import 'package:shoppie/providers/cart.dart';
 import 'package:shoppie/screens/product_detail.dart';
 
 enum Operation { increment, decrement }
+enum RemoveCartOperation { yes, no }
 
 class SingleCartItem extends StatefulWidget {
   final String id;
@@ -30,6 +31,28 @@ class SingleCartItem extends StatefulWidget {
 }
 
 class _SingleCartItemState extends State<SingleCartItem> {
+  Widget textAction(String text, RemoveCartOperation operation) {
+    return TextButton(
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.deepOrange,
+        ),
+      ),
+      onPressed: () {
+        switch (operation) {
+          case RemoveCartOperation.no:
+            Navigator.of(context).pop(false);
+            break;
+          case RemoveCartOperation.yes:
+            Navigator.of(context).pop(true);
+            break;
+          default:
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cartData = Provider.of<Cart>(context, listen: false);
@@ -37,6 +60,27 @@ class _SingleCartItemState extends State<SingleCartItem> {
 
     return Dismissible(
       key: ValueKey(widget.id),
+      confirmDismiss: (direction) => showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          contentPadding: const EdgeInsets.all(5),
+          elevation: 3,
+          titlePadding: const EdgeInsets.all(10),
+          title: const Text(
+            'Are you sure?',
+            textAlign: TextAlign.center,
+          ),
+          content: Text(
+            'Do you want to remove ${widget.name} from cart?',
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            textAction('Yes', RemoveCartOperation.yes),
+            textAction('No', RemoveCartOperation.no),
+            textAction('Cancel', RemoveCartOperation.no),
+          ],
+        ),
+      ),
       onDismissed: (direction) => cartData.removeFromCart(widget.id),
       direction: DismissDirection.endToStart,
       background: Container(

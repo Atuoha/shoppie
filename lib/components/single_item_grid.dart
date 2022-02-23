@@ -33,6 +33,18 @@ class _SingleItemGridViewState extends State<SingleItemGridView> {
     final productData = Provider.of<Products>(context, listen: false);
     final cartData = Provider.of<Cart>(context, listen: false);
 
+    void toggleAddToCart() {
+      setState(() {
+        cartData.addItemToCart(
+          widget.id,
+          widget.name,
+          widget.price,
+          widget.previousPrice,
+          widget.imageUrl,
+        );
+      });
+    }
+
     // ignore: sized_box_for_whitespace
     return Container(
       height: 95,
@@ -91,18 +103,34 @@ class _SingleItemGridViewState extends State<SingleItemGridView> {
                                 : Icons.add_shopping_cart_sharp,
                             color: Colors.deepOrange,
                           ),
-                          onPressed: () => setState(
-                            () {
-                              cartData.addItemToCart(
-                                widget.id,
-                                widget.name,
-                                widget.price,
-                                widget.previousPrice,
-                                widget.imageUrl,
-                                // widget.imageUrl,
-                              );
-                            },
-                          ),
+                          onPressed: () => {
+                            toggleAddToCart(),
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                duration: const Duration(seconds: 2),
+                                elevation: 5,
+                                padding: const EdgeInsets.all(5),
+                                backgroundColor: Colors.grey,
+                                content: Text(
+                                  cartData.isItemOnCart(widget.id)
+                                      ? 'Added ${widget.name} To Cart!'
+                                      : 'Removed ${widget.name} From Cart!',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                  textAlign: TextAlign.center,
+                                ),
+                                action: SnackBarAction(
+                                  textColor: Colors.deepOrange,
+                                  label: 'UNDO',
+                                  onPressed: () {
+                                    toggleAddToCart();
+                                  },
+                                ),
+                              ),
+                            )
+                          },
                         ),
                       ],
                     ),

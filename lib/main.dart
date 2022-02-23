@@ -7,8 +7,10 @@ import 'package:shoppie/providers/product.dart';
 import 'package:shoppie/screens/cart.dart';
 import 'package:shoppie/screens/orders.dart';
 import 'package:shoppie/screens/product_detail.dart';
+import 'package:shoppie/screens/user_products.dart';
 import 'components/navigation.dart';
 import 'providers/orders.dart';
+import 'screens/add_and_edit_product.dart';
 
 void main() => runApp(const MyApp());
 
@@ -34,11 +36,14 @@ class _MyAppState extends State<MyApp> {
           NavigationBar.routeName: (context) => const NavigationBar(),
           CartScreen.routeName: (context) => const CartScreen(),
           OrdersScreen.routeName: (context) => const OrdersScreen(),
+          UserProductScreen.routeName: (context) => const UserProductScreen(),
+          AddAndEditProduct.routeName: (context) =>  AddAndEditProduct(),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Montserrat',
-          primaryColor: Colors.deepOrange
+          primaryColor: Colors.deepOrange,
+          primarySwatch: Colors.deepOrange,
         ),
         home: const NavigationBar(),
       ),

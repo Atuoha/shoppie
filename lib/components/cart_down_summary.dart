@@ -7,6 +7,7 @@ import 'package:shoppie/screens/orders.dart';
 class CartDownSummary extends StatelessWidget {
   final double totalAmount;
   final List<CartItem> cartItems;
+  // ignore: prefer_const_constructors_in_immutables, use_key_in_widget_constructors
   CartDownSummary(this.totalAmount,this.cartItems);
 
   @override

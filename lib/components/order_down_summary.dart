@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shoppie/providers/cart.dart';
 import 'package:shoppie/providers/orders.dart';
-import 'package:shoppie/screens/orders.dart';
 
 class OrderDownSummary extends StatelessWidget {
   final double totalAmount;
   final List<OrderItem> cartItems;
+  // ignore: prefer_const_constructors_in_immutables, use_key_in_widget_constructors
   OrderDownSummary(this.totalAmount,this.cartItems);
 
   @override

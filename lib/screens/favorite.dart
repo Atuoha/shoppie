@@ -13,8 +13,10 @@ class FavoriteScreen extends StatelessWidget {
           )
         : Padding(
             padding: const EdgeInsets.all(10),
-            child: GridItemView(
-              Provider.of<Products>(context, listen: false).favoriteItems,
+            child: Consumer<Products>(builder:(_,products,p2)=>
+              GridItemView(
+                Provider.of<Products>(context, listen: false).favoriteItems,
+              ),
             ),
           );
   }

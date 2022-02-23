@@ -2,29 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shoppie/models/product.dart';
 
 class Products with ChangeNotifier {
-  // List<Product> cartItems = [];
   List<Product> favoriteItems = [];
-  // List<double> totalPrice = [];
-
-  // bool isItemOnCart(Product product) {
-  //   return cartItems.any((cartitem) => cartitem.id == product.id);
-  // }
-
-  // void toggleItemtoCart(Product product) {
-  //   if (isItemOnCart(product)) {
-  //     for (var i = 0; i < totalPrice.length; i++) {
-  //       if (totalPrice[i] == product.price) {
-  //         totalPrice.removeWhere((price) => price == totalPrice[i]);
-  //       }
-  //     }
-  //     cartItems.remove(product);
-  //   } else {
-  //     totalPrice.add(product.price);
-  //     cartItems.add(product);
-  //   }
-  //   notifyListeners();
-  // }
-
+  List<Product> userProducts = [];
 
   void toggleItemtoFavirite(Product product) {
     if (isItemOnFavorite(product)) {
@@ -39,24 +18,9 @@ class Products with ChangeNotifier {
     return favoriteItems.any((favoriteItem) => favoriteItem.id == product.id);
   }
 
-  // var _showOnlyFavorites = false;
-
   List<Product> get availableProducts {
-    // if (_showOnlyFavorites) {
-    //   return favItems;
-    // }
     return [..._availableProducts];
   }
-
-  // void showOnlyFavorites() {
-  //   _showOnlyFavorites = true;
-  //   notifyListeners();
-  // }
-
-  // void showAll(){
-  //   _showOnlyFavorites = false;
-  //   notifyListeners();
-  // }
 
   Product findById(String id) {
     return availableProducts.firstWhere((product) => product.id == id);
@@ -64,6 +28,34 @@ class Products with ChangeNotifier {
 
   List<Product> get favItems {
     return _availableProducts.where((product) => product.isFavorite).toList();
+  }
+
+  void deleteProduct(String id) {
+    _availableProducts.removeWhere((product) => product.id == id);
+    notifyListeners();
+  }
+
+  void addProduct(Product product) {
+    var newProduct = Product(
+      id: DateTime.now().toString(),
+      name: product.name,
+      imageUrl: product.imageUrl,
+      description: product.description,
+      price: product.price,
+      previousPrice: product.previousPrice,
+      colors: product.colors,
+    );
+
+    _availableProducts.insert(0, newProduct);
+    notifyListeners();
+  }
+
+  void updateProduct(Product newProductDetails ){
+   final prodIndex = _availableProducts.indexWhere((product)=> product.id == newProductDetails.id);
+   if(prodIndex >= 0){
+    _availableProducts[prodIndex] = newProductDetails;
+    notifyListeners();
+   }
   }
 
   final List<Product> _availableProducts = [
