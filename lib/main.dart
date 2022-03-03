@@ -1,5 +1,4 @@
 // import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoppie/providers/cart.dart';
@@ -33,7 +32,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         routes: {
           ProductDetails.routeName: (context) => ProductDetails(),
-          NavigationBar.routeName: (context) => const NavigationBar(),
+          NavigationBars.routeName: (context) => const NavigationBars(),
           CartScreen.routeName: (context) => const CartScreen(),
           OrdersScreen.routeName: (context) => const OrdersScreen(),
           UserProductScreen.routeName: (context) => const UserProductScreen(),
@@ -45,7 +44,7 @@ class _MyAppState extends State<MyApp> {
           primaryColor: Colors.deepOrange,
           primarySwatch: Colors.deepOrange,
         ),
-        home: const NavigationBar(),
+        home: const NavigationBars(),
       ),
     );
   }

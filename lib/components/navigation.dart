@@ -12,15 +12,15 @@ import 'drawer.dart';
 
 enum FilterOps { favorite, all }
 
-class NavigationBar extends StatefulWidget {
-  const NavigationBar({Key? key}) : super(key: key);
+class NavigationBars extends StatefulWidget {
+  const NavigationBars({Key? key}) : super(key: key);
   static const routeName = '/navigationBar';
 
   @override
-  State<NavigationBar> createState() => _NavigationBarState();
+  State<NavigationBars> createState() => _NavigationBarState();
 }
 
-class _NavigationBarState extends State<NavigationBar> {
+class _NavigationBarState extends State<NavigationBars> {
   var showOnlyFavorites = false;
 
   // ignore: prefer_final_fields

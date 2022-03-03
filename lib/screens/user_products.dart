@@ -10,6 +10,10 @@ class UserProductScreen extends StatelessWidget {
   const UserProductScreen({Key? key}) : super(key: key);
   static const routeName = '/user-products';
 
+  Future<void> _onRefresh(BuildContext context) async {
+    await Provider.of<Products>(context).fetchProduct();
+  }
+
   @override
   Widget build(BuildContext context) {
     final productData = Provider.of<Products>(context, listen: false);
@@ -43,50 +47,53 @@ class UserProductScreen extends StatelessWidget {
                 Icons.add,
                 color: Colors.black,
               ),
-              onPressed: () =>    
-              Navigator.of(context).pushNamed(
+              onPressed: () => Navigator.of(context).pushNamed(
                 AddAndEditProduct.routeName,
               ),
             ),
           ),
         ],
       ),
-      body: productData.availableProducts.isEmpty
-          ? const Center(
-              child: Text(
-                'Opps! Your product list is empty',
-                style: TextStyle(
-                  fontSize: 15,
+      body: RefreshIndicator(
+        color: Colors.deepOrange,
+        onRefresh: () => _onRefresh(context),
+        child: productData.availableProducts.isEmpty
+            ? const Center(
+                child: Text(
+                  'Opps! Your product list is empty',
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
                 ),
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Consumer<Products>(
-                builder: (_, product, p) => ListView.builder(
-                  itemCount: productData.availableProducts.length,
-                  itemBuilder: (context, index) => Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pushNamed(
-                          ProductDetails.routeName,
-                          arguments: {
-                            'id': product.availableProducts[index].id,
-                          },
+              )
+            : Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Consumer<Products>(
+                  builder: (_, product, p) => ListView.builder(
+                    itemCount: productData.availableProducts.length,
+                    itemBuilder: (context, index) => Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).pushNamed(
+                            ProductDetails.routeName,
+                            arguments: {
+                              'id': product.availableProducts[index].id,
+                            },
+                          ),
+                          child: SingleUserProductItem(
+                            id: product.availableProducts[index].id,
+                            name: product.availableProducts[index].name,
+                            imageUrl: product.availableProducts[index].imageUrl,
+                            price: product.availableProducts[index].price,
+                          ),
                         ),
-                        child: SingleUserProductItem(
-                          id: product.availableProducts[index].id,
-                          name: product.availableProducts[index].name,
-                          imageUrl: product.availableProducts[index].imageUrl,
-                          price: product.availableProducts[index].price,
-                        ),
-                      ),
-                      const Divider()
-                    ],
+                        const Divider()
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+      ),
     );
   }
 }

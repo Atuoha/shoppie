@@ -6,7 +6,36 @@ import 'package:shoppie/components/carousel_item.dart';
 import 'package:shoppie/providers/product.dart';
 
 // ignore: use_key_in_widget_constructors
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  var _initState = true;
+  var _isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_initState) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context, listen: false).fetchProduct().then(
+            (_) => {
+              setState(() {
+                _isLoading = false;
+              })
+            },
+          );
+    }
+    super.didChangeDependencies();
+    _initState = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,13 +125,20 @@ class Body extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Consumer<Products>(builder: (_,products,p2)=>GridItemView(
-                Provider.of<Products>(
-                  context,
-                  listen: false,
-                ).availableProducts,
-              ),
-            ),
+            child: _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.deepOrange,
+                    ),
+                  )
+                : Consumer<Products>(
+                    builder: (_, products, p2) => GridItemView(
+                      Provider.of<Products>(
+                        context,
+                        listen: false,
+                      ).availableProducts,
+                    ),
+                  ),
           )
         ],
       ),

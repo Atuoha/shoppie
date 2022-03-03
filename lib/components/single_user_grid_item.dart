@@ -42,6 +42,16 @@ class SingleUserProductItem extends StatelessWidget {
       );
     }
 
+    SnackBar customSnackBar(String text, Color color) {
+      return SnackBar(
+        content: Text(
+          text,
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: color,
+      );
+    }
+
     return Dismissible(
       confirmDismiss: (direction) => showDialog(
         context: context,
@@ -114,10 +124,26 @@ class SingleUserProductItem extends StatelessWidget {
                     content: Text('Are you sure you want to delete $name?'),
                     actions: [
                       TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(true);
-                          Provider.of<Products>(context, listen: false)
-                              .deleteProduct(id);
+                        onPressed: () async {
+                          try {
+                            await Provider.of<Products>(context, listen: false)
+                                .deleteProduct(id);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              customSnackBar(
+                                '$name has been deleted!',
+                                Colors.green.withOpacity(0.8),
+                              ),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              customSnackBar(
+                                'An error has occured!',
+                                Colors.deepOrange.withOpacity(0.8),
+                              ),
+                            );
+                          } finally {
+                            Navigator.of(context).pop(true);
+                          }
                         },
                         child: const Text('Yes'),
                       ),

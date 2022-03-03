@@ -50,6 +50,8 @@ class _AddAndEditProductState extends State<AddAndEditProduct> {
     'colors': ''
   };
 
+  var _loading = false;
+
   @override
   void initState() {
     _imageUrlNode.addListener(_updateImageUrl);
@@ -107,18 +109,52 @@ class _AddAndEditProductState extends State<AddAndEditProduct> {
     }
   }
 
-  void _saveData() {
+  showDialogModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('An Error Occured!'),
+        content: const Text(
+          'Opps! Something went wrong. Please try again later.',
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Okay'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> _saveData() async {
     final isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
     }
     _form.currentState!.save();
+    setState(() {
+      _loading = true;
+    });
     if (_editProduct.id == '') {
-      Provider.of<Products>(context, listen: false).addProduct(_editProduct);
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_editProduct);
+      } catch (e) {
+        await showDialogModal(context);
+      }
     } else {
-      Provider.of<Products>(context, listen: false)
-          .updateProduct(_editProduct);
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .updateProduct(_editProduct);
+      } catch (e) {
+        await showDialogModal(context);
+      }
     }
+    setState(() {
+      _loading = false;
+    });
     Navigator.of(context).pop();
   }
 
@@ -288,160 +324,166 @@ class _AddAndEditProductState extends State<AddAndEditProduct> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: _form,
-          autovalidateMode: AutovalidateMode.always,
-          child: ListView(
-            children: [
-              customTextFormField(
-                Icons.text_fields,
-                'Product Name',
-                'Text here',
-                _nameNode,
-                _priceNode,
-                Data.name,
-                1,
-                1,
-                TextInputType.text,
-                _initValue['name'],
+      body: _loading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Colors.deepOrange,
               ),
-              const SizedBox(height: 10),
-              customTextFormField(
-                Icons.attach_money,
-                'Product Price',
-                'Text here',
-                _priceNode,
-                _previousPriceNode,
-                Data.price,
-                1,
-                1,
-                TextInputType.number,
-                _initValue['price'].toString(),
-              ),
-              const SizedBox(height: 10),
-              customTextFormField(
-                Icons.attach_money,
-                'Product Previous Price',
-                'Text here',
-                _previousPriceNode,
-                _colorsNode,
-                Data.previousPrice,
-                1,
-                1,
-                TextInputType.number,
-                _initValue['previousPrice'].toString(),
-              ),
-              const SizedBox(height: 10),
-              customTextFormField(
-                Icons.color_lens,
-                'Product Colors',
-                'E.g red,orange,yellow.',
-                _colorsNode,
-                _descriptionNode,
-                Data.colors,
-                1,
-                1,
-                TextInputType.text,
-                _initValue['colors'],
-              ),
-              const SizedBox(height: 10),
-              customTextFormField(
-                Icons.text_format,
-                'Product Description',
-                'Text here',
-                _descriptionNode,
-                _imageUrlNode,
-                Data.description,
-                3,
-                3,
-                TextInputType.multiline,
-                _initValue['description'],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Enter a value for imageUrl!';
-                        }
+            )
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Form(
+                key: _form,
+                autovalidateMode: AutovalidateMode.always,
+                child: ListView(
+                  children: [
+                    customTextFormField(
+                      Icons.text_fields,
+                      'Product Name',
+                      'Text here',
+                      _nameNode,
+                      _priceNode,
+                      Data.name,
+                      1,
+                      1,
+                      TextInputType.text,
+                      _initValue['name'],
+                    ),
+                    const SizedBox(height: 10),
+                    customTextFormField(
+                      Icons.attach_money,
+                      'Product Price',
+                      'Text here',
+                      _priceNode,
+                      _previousPriceNode,
+                      Data.price,
+                      1,
+                      1,
+                      TextInputType.number,
+                      _initValue['price'].toString(),
+                    ),
+                    const SizedBox(height: 10),
+                    customTextFormField(
+                      Icons.attach_money,
+                      'Product Previous Price',
+                      'Text here',
+                      _previousPriceNode,
+                      _colorsNode,
+                      Data.previousPrice,
+                      1,
+                      1,
+                      TextInputType.number,
+                      _initValue['previousPrice'].toString(),
+                    ),
+                    const SizedBox(height: 10),
+                    customTextFormField(
+                      Icons.color_lens,
+                      'Product Colors',
+                      'E.g red,orange,yellow.',
+                      _colorsNode,
+                      _descriptionNode,
+                      Data.colors,
+                      1,
+                      1,
+                      TextInputType.text,
+                      _initValue['colors'],
+                    ),
+                    const SizedBox(height: 10),
+                    customTextFormField(
+                      Icons.text_format,
+                      'Product Description',
+                      'Text here',
+                      _descriptionNode,
+                      _imageUrlNode,
+                      Data.description,
+                      3,
+                      3,
+                      TextInputType.multiline,
+                      _initValue['description'],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Enter a value for imageUrl!';
+                              }
 
-                        if (!value.startsWith('http') &&
-                            !value.startsWith('https') &&
-                            !value.startsWith('www')) {
-                          return 'Enter a valid URL for image!';
-                        }
+                              if (!value.startsWith('http') &&
+                                  !value.startsWith('https') &&
+                                  !value.startsWith('www')) {
+                                return 'Enter a valid URL for image!';
+                              }
 
-                        if (!value.endsWith('.png') &&
-                            !value.endsWith('.jpg') &&
-                            !value.endsWith('.jpeg')) {
-                          return 'Enter a valid URL for image with extensions of PNG, JPG AND JPEG!';
-                        }
-                        return null;
-                      },
-                      controller: _imageUrlController,
-                      textInputAction: TextInputAction.done,
-                      textAlign: TextAlign.center,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: 'Product ImageURL',
-                        icon: const Icon(Icons.photo),
-                        hintText: 'Text here',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                            color: Colors.grey,
+                              if (!value.endsWith('.png') &&
+                                  !value.endsWith('.jpg') &&
+                                  !value.endsWith('.jpeg')) {
+                                return 'Enter a valid URL for image with extensions of PNG, JPG AND JPEG!';
+                              }
+                              return null;
+                            },
+                            controller: _imageUrlController,
+                            textInputAction: TextInputAction.done,
+                            textAlign: TextAlign.center,
+                            autofocus: true,
+                            decoration: InputDecoration(
+                              labelText: 'Product ImageURL',
+                              icon: const Icon(Icons.photo),
+                              hintText: 'Text here',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            keyboardType: TextInputType.url,
+                            focusNode: _imageUrlNode,
+                            onFieldSubmitted: (_) {
+                              _saveData();
+                            },
+                            onSaved: (newValue) {
+                              _editProduct = Product(
+                                id: _editProduct.id,
+                                isFavorite: _editProduct.isFavorite,
+                                name: _editProduct.name,
+                                imageUrl: newValue.toString(),
+                                description: _editProduct.description,
+                                price: _editProduct.price,
+                                previousPrice: _editProduct.previousPrice,
+                                colors: _editProduct.colors,
+                              );
+                            },
                           ),
                         ),
-                      ),
-                      keyboardType: TextInputType.url,
-                      focusNode: _imageUrlNode,
-                      onFieldSubmitted: (_) {
-                        _saveData();
-                      },
-                      onSaved: (newValue) {
-                        _editProduct = Product(
-                          id: _editProduct.id,
-                          isFavorite: _editProduct.isFavorite,
-                          name: _editProduct.name,
-                          imageUrl: newValue.toString(),
-                          description: _editProduct.description,
-                          price: _editProduct.price,
-                          previousPrice: _editProduct.previousPrice,
-                          colors: _editProduct.colors,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 7),
-                  if (_imageUrlController.text != '')
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                            _imageUrlController.text,
+                        const SizedBox(width: 7),
+                        if (_imageUrlController.text != '')
+                          Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                  _imageUrlController.text,
+                                ),
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                width: 1,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(
-                          width: 1,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
     );
   }
 }
